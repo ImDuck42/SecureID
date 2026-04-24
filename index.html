@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SecureID Portal — Totally Legitimate Identity Service</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+</head>
+<body>
+
+  <!-- Top bar -->
+  <header id="topbar">
+    <div id="logo">
+      <i class="fa-solid fa-shield-halved"></i>
+      <span>SecureID<sup>™</sup></span>
+    </div>
+    <nav id="nav-links">
+      <a href="#" id="nav-about"><i class="fa-solid fa-circle-info"></i> About</a>
+      <a href="#" id="nav-privacy"><i class="fa-solid fa-user-secret"></i> Privacy</a>
+    </nav>
+    <div id="user-badge" class="hidden">
+      <i class="fa-solid fa-circle-user"></i>
+      <span id="badge-name">—</span>
+      <button id="btn-logout"><i class="fa-solid fa-right-from-bracket"></i></button>
+    </div>
+  </header>
+
+  <!-- Hero banner (shown only when logged out) -->
+  <section id="hero" class="page-section">
+    <div id="hero-bg-grid"></div>
+    <div id="hero-content">
+      <div id="hero-badge">
+        <i class="fa-solid fa-building-columns"></i>
+        <span>Official Government-Adjacent Portal</span>
+      </div>
+      <h1 id="hero-title">Verify. Trust. Comply.</h1>
+      <p id="hero-sub">Because handing your ID to a stranger on the internet<br>has <em>never</em> gone wrong.</p>
+      <div id="hero-btns">
+        <button class="btn-primary" id="btn-go-register">
+          <i class="fa-solid fa-user-plus"></i> Create Account
+        </button>
+        <button class="btn-ghost" id="btn-go-login">
+          <i class="fa-solid fa-right-to-bracket"></i> Sign In
+        </button>
+      </div>
+      <div id="trust-badges">
+        <span><i class="fa-solid fa-check-circle"></i> ISO 27001 Certified*</span>
+        <span><i class="fa-solid fa-check-circle"></i> GDPR Compliant†</span>
+        <span><i class="fa-solid fa-check-circle"></i> 256-bit Security‡</span>
+      </div>
+      <p id="fine-print">* Certification pending since 2019. † We store everything. ‡ We use SHA-1 on the dev box.</p>
+    </div>
+  </section>
+
+  <!-- Auth panel -->
+  <section id="auth-panel" class="page-section hidden">
+
+    <!-- Register view -->
+    <div id="view-register" class="auth-card hidden">
+      <div class="card-header">
+        <i class="fa-solid fa-user-plus"></i>
+        <h2>Create Account</h2>
+        <p class="card-sub">Step 1 of 2 — Basic Credentials</p>
+      </div>
+      <div class="form-group">
+        <label for="reg-user"><i class="fa-solid fa-at"></i> Username</label>
+        <input id="reg-user" type="text" placeholder="citizen_007" autocomplete="off" />
+      </div>
+      <div class="form-group">
+        <label for="reg-pass"><i class="fa-solid fa-lock"></i> Password</label>
+        <input id="reg-pass" type="password" placeholder="Min 8 characters" />
+        <div id="pass-strength-bar"><div id="pass-strength-fill"></div></div>
+      </div>
+      <div class="form-group">
+        <label for="reg-pass2"><i class="fa-solid fa-lock-open"></i> Confirm Password</label>
+        <input id="reg-pass2" type="password" placeholder="Repeat password" />
+      </div>
+      <div id="reg-error" class="msg-error hidden"></div>
+      <button class="btn-primary full-w" id="btn-register">
+        <i class="fa-solid fa-arrow-right"></i> Create Account
+      </button>
+      <p class="switch-link">Already have an account? <a id="link-to-login">Sign in</a></p>
+    </div>
+
+    <!-- Login view -->
+    <div id="view-login" class="auth-card hidden">
+      <div class="card-header">
+        <i class="fa-solid fa-right-to-bracket"></i>
+        <h2>Sign In</h2>
+        <p class="card-sub">Enter username, then prove it's you with your ID</p>
+      </div>
+      <div class="form-group">
+        <label for="login-user"><i class="fa-solid fa-at"></i> Username</label>
+        <input id="login-user" type="text" placeholder="Your username" autocomplete="off" />
+      </div>
+      <!-- Step 1: ID photo upload -->
+      <div id="login-id-step">
+        <div class="form-group">
+          <label><i class="fa-solid fa-id-card"></i> ID Photo Verification</label>
+          <div class="upload-zone" id="login-id-zone">
+            <i class="fa-solid fa-camera"></i>
+            <span>Drop or click to upload your ID photo</span>
+            <input type="file" id="login-id-file" accept="image/*" />
+          </div>
+          <div id="login-id-preview" class="preview-box hidden"></div>
+        </div>
+        <div id="login-id-progress" class="progress-block hidden">
+          <div class="spinner-line"><i class="fa-solid fa-spinner fa-spin"></i><span id="login-id-status">Scanning document…</span></div>
+        </div>
+        <div id="login-error" class="msg-error hidden"></div>
+        <button class="btn-primary full-w" id="btn-verify-id">
+          <i class="fa-solid fa-magnifying-glass"></i> Verify Identity
+        </button>
+      </div>
+      <!-- Step 2: Password (shown after ID passes) -->
+      <div id="login-pass-step" class="hidden">
+        <div class="form-group">
+          <label for="login-pass"><i class="fa-solid fa-lock"></i> Password</label>
+          <input id="login-pass" type="password" placeholder="Your password" />
+        </div>
+        <div id="login-pass-error" class="msg-error hidden"></div>
+        <button class="btn-primary full-w" id="btn-login-final">
+          <i class="fa-solid fa-unlock"></i> Sign In
+        </button>
+      </div>
+      <p class="switch-link">New here? <a id="link-to-register">Create account</a></p>
+    </div>
+
+  </section>
+
+  <!-- ID Verification (post-register, pre-dashboard) -->
+  <section id="id-verify-panel" class="page-section hidden">
+    <div class="auth-card wide">
+      <div class="card-header">
+        <i class="fa-solid fa-id-card-clip"></i>
+        <h2>Identity Verification Required</h2>
+        <p class="card-sub">Your account is locked until we confirm who you are. Totally normal.</p>
+      </div>
+      <div id="verify-disclaimer">
+        <div class="disclaimer-box">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <div>
+            <strong>Why do we need this?</strong>
+            <p>Government regulations require us to collect a photo of your government-issued ID. We pinky-promise to store it responsibly in a <em>public GitHub repository</em>.</p>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label><i class="fa-solid fa-id-card"></i> Upload ID Photo</label>
+        <div class="upload-zone" id="verify-id-zone">
+          <i class="fa-solid fa-cloud-arrow-up"></i>
+          <span>Drop or click — passport, driver's license, Post-it note with your name on it, whatever</span>
+          <input type="file" id="verify-id-file" accept="image/*" />
+        </div>
+        <div id="verify-id-preview" class="preview-box hidden"></div>
+      </div>
+      <div id="verify-progress" class="progress-block hidden">
+        <div class="progress-steps">
+          <div class="step" id="step-scan"><i class="fa-solid fa-file-waveform"></i> Scanning document</div>
+          <div class="step" id="step-ai"><i class="fa-solid fa-robot"></i> AI verification</div>
+          <div class="step" id="step-store"><i class="fa-solid fa-database"></i> Storing your data</div>
+        </div>
+      </div>
+      <div id="verify-error" class="msg-error hidden"></div>
+      <div id="verify-success" class="msg-success hidden">
+        <i class="fa-solid fa-circle-check"></i> Verification complete! Welcome to the surveillance network.
+      </div>
+      <button class="btn-primary full-w" id="btn-submit-id">
+        <i class="fa-solid fa-upload"></i> Submit ID for Verification
+      </button>
+    </div>
+  </section>
+
+  <!-- Dashboard -->
+  <section id="dashboard" class="page-section hidden">
+    <div id="dash-welcome">
+      <div id="dash-avatar"><i class="fa-solid fa-circle-user"></i></div>
+      <div id="dash-greeting">
+        <h2>Welcome back, <span id="dash-username">—</span></h2>
+        <p id="dash-role-tag"><i class="fa-solid fa-certificate"></i> Verified Citizen</p>
+      </div>
+    </div>
+
+    <div id="dash-grid">
+
+      <div class="dash-card" id="card-profile">
+        <div class="dash-card-head">
+          <i class="fa-solid fa-address-card"></i>
+          <h3>Your Profile</h3>
+        </div>
+        <div id="profile-fields"></div>
+      </div>
+
+      <div class="dash-card" id="card-status">
+        <div class="dash-card-head">
+          <i class="fa-solid fa-chart-line"></i>
+          <h3>Account Status</h3>
+        </div>
+        <div id="status-items">
+          <div class="status-row">
+            <span><i class="fa-solid fa-shield-check"></i> Identity</span>
+            <span class="badge-green">Verified</span>
+          </div>
+          <div class="status-row">
+            <span><i class="fa-solid fa-eye"></i> Surveillance</span>
+            <span class="badge-green">Active</span>
+          </div>
+          <div class="status-row">
+            <span><i class="fa-solid fa-handcuffs"></i> Wanted Status</span>
+            <span class="badge-green" id="wanted-status">Clean (probably)</span>
+          </div>
+          <div class="status-row">
+            <span><i class="fa-solid fa-cookie-bite"></i> Cookies Accepted</span>
+            <span class="badge-yellow">All of them</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-card wide-card" id="card-data">
+        <div class="dash-card-head">
+          <i class="fa-solid fa-database"></i>
+          <h3>Data We Have on You</h3>
+          <span class="card-head-sub">Sourced from your ID, which you uploaded voluntarily</span>
+        </div>
+        <div id="id-data-display"></div>
+      </div>
+
+      <div class="dash-card" id="card-danger">
+        <div class="dash-card-head danger">
+          <i class="fa-solid fa-skull-crossbones"></i>
+          <h3>Danger Zone</h3>
+        </div>
+        <p class="card-text">You cannot delete your account. Your data is ours now. This is fine.</p>
+        <button class="btn-danger" id="btn-dash-logout">
+          <i class="fa-solid fa-right-from-bracket"></i> Sign Out (temporary, we keep the data)
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Global toast -->
+  <div id="toast-container"></div>
+
+  <!-- Loading overlay -->
+  <div id="overlay" class="hidden">
+    <div id="overlay-inner">
+      <i class="fa-solid fa-circle-notch fa-spin"></i>
+      <span id="overlay-msg">Processing…</span>
+    </div>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
