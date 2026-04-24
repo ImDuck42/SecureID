@@ -16,7 +16,7 @@ const CFG = {
     useRaw:       true,
   },
   gemini: {
-    apiKey: 'ghdb_enc_BgE+IxQxABggLBMnDC9xCC4SPXs0EgAJdBkhMn4wdxcVBRB1Mi03',
+    apiKey: 'AIzaSyDZgdWeKg5JiZy9sZDK3Qep9x3URMT7ues', // Be cool and dont steal pls
     model:  'gemma-4-26b-a4b-it',
     url:    'https://generativelanguage.googleapis.com/v1beta/models/',
   },
@@ -175,7 +175,7 @@ async function ocrImage(file) {
 }
 
 // ══ Gemini calls ════════════════════════════════════════════════════════════
-const GEMINI_URL = `${CFG.gemini.url}${CFG.gemini.model}:generateContent?key=${GitHubDB.encodeToken(CFG.gemini.apiKey)}`
+const GEMINI_URL = `${CFG.gemini.url}${CFG.gemini.model}:generateContent?key=${CFG.gemini.apiKey}`
 
 async function geminiChat(systemPrompt, userMsg) {
   const body = {

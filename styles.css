@@ -66,6 +66,18 @@ body {
     }
 }
 
+/* ── Background Grid ── */
+#hero-bg-grid {
+    position: fixed;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(180, 190, 254, .04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(180, 190, 254, .04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+}
+
 /* ── Typography ── */
 h1,
 h2,
@@ -223,16 +235,6 @@ em {
     flex-direction: column;
     text-align: center;
     overflow: hidden;
-
-    #hero-bg-grid {
-        position: absolute;
-        inset: 0;
-        background-image:
-            linear-gradient(rgba(180, 190, 254, .04) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(180, 190, 254, .04) 1px, transparent 1px);
-        background-size: 40px 40px;
-        pointer-events: none;
-    }
 
     #hero-content {
         position: relative;
