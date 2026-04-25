@@ -1510,6 +1510,14 @@ em {
         padding: 1.5rem;
     }
 
+    #cookie-popup {
+        bottom: 5%;
+    }
+
+    #cookie-btns {
+        flex-direction: column;
+    }
+
     .modal-dual-inner {
         flex-direction: column;
         gap: .75rem;
