@@ -1511,7 +1511,7 @@ em {
     }
 
     #cookie-popup {
-        bottom: 5%;
+        bottom: 0;
     }
 
     #cookie-btns {
