@@ -1,0 +1,40 @@
+{
+  "id": "moea0x77-0u3w6t6s431z",
+  "username": "TestUser69",
+  "idData": {
+    "documentType": "DRIVER LICENSE",
+    "documentNumber": "SN-394",
+    "class": null,
+    "dateOfBirth": "1776-09-09",
+    "issueDate": "2023-04-29",
+    "expiryDate": "2394-04-29",
+    "address": {
+      "street": "394 MAPLEWOOD LANE",
+      "city": "SPRINGFIELD",
+      "state": "FO",
+      "zipCode": "03940"
+    },
+    "gender": {
+      "value": "YES",
+      "raw": "SEX YES"
+    },
+    "eyeColor": {
+      "value": "BEAUT",
+      "raw": "EYES BEAUT"
+    },
+    "height": {
+      "value": "4&'-00\"<T'-00\"?",
+      "raw": "HGT »>4&'-00\"<T'-00\"?"
+    },
+    "weight": "100-300 Lb",
+    "restrictions": "NONE",
+    "ambiguousData": {
+      "dobRaw": "09/09/1776",
+      "expiryRaw": "04/29/2394",
+      "issuanceRaw": "ISS 04/29/2023"
+    }
+  },
+  "verifiedAt": "2026-04-25T11:50:13.680Z",
+  "createdAt": "2026-04-25T11:50:14.188Z",
+  "updatedAt": "2026-04-25T11:50:14.188Z"
+}
