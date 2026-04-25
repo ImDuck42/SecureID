@@ -1,0 +1,32 @@
+{
+  "id": "moea8z3i-256j2f4f3q4m",
+  "username": "ImDuck42",
+  "idData": {
+    "documentType": "DRIVER LICENSE",
+    "documentNumber": "SN-394",
+    "licenseClass": null,
+    "dateOfBirth": "1776-09-09",
+    "issueDate": "2023-04-29",
+    "expiryDate": "2394-04-29",
+    "address": {
+      "street": "394 MAPLEWOOD LANE",
+      "city": "SPRINGFIELD",
+      "state": "FO",
+      "zipCode": "03940"
+    },
+    "gender": "YES",
+    "eyeColor": "BEAUT",
+    "height": "4'00\"",
+    "weight": "100-300 Lb",
+    "restrictions": "NONE",
+    "rawSnippets": {
+      "genderRaw": "SEX YES",
+      "eyesRaw": "EYES BEAUT",
+      "heightRaw": "HGT »>4&'-00\"<T'-00\"?",
+      "documentNumberRaw": "SN-394"
+    }
+  },
+  "verifiedAt": "2026-04-25T11:56:16.592Z",
+  "createdAt": "2026-04-25T11:56:17.097Z",
+  "updatedAt": "2026-04-25T11:56:17.097Z"
+}
