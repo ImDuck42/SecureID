@@ -463,8 +463,68 @@ async function tryRestoreSession() {
   return false
 }
 
+
+// ══ Cookie Popup ══════════════════════════════════════════════════════════════
+function initCookiePopup() {
+  const popup  = $('cookie-popup')
+  const accept = $('btn-cookie-accept')
+  const reject = $('btn-cookie-reject')
+  const manage = $('btn-cookie-settings')
+
+  // Create backdrop to block clicks outside popup
+  const backdrop = document.createElement('div')
+  backdrop.id = 'cookie-backdrop'
+  Object.assign(backdrop.style, {
+    position: 'fixed',
+    inset: '0',
+    zIndex: '399', // 1 below Pop-Up
+    cursor: 'wait',
+  })
+  document.body.appendChild(backdrop)
+
+  // Custom checkbox toggle
+  document.querySelectorAll('.cookie-toggle[data-ck]').forEach(label => {
+    label.addEventListener('click', () => {
+      const box = label.querySelector('.ck-box')
+      box.classList.toggle('ck-checked')
+    })
+  })
+
+  const setAllBoxes = (checked) => {
+    document.querySelectorAll('.cookie-toggle[data-ck] .ck-box').forEach(box => {
+      box.classList.toggle('ck-checked', checked)
+    })
+  }
+
+  const dismiss = (msg, type = 'info') => {
+    popup.classList.add('cookie-out')
+    backdrop.remove()
+    popup.addEventListener('animationend', () => popup.remove(), { once: true })
+    toast(msg, type, 6000)
+  }
+
+  accept.addEventListener('click', () =>
+    dismiss('All cookies accepted. Nyxie is pleased.', 'ok'))
+
+  reject.addEventListener('click', () => {
+    toast('The decline feature is planned for Q3 2026. Nyxie is looking into it.', 'info', 5000)
+    toast('(We have added your rejection to our marketing list.)', 'info', 7000)
+  })
+
+  manage.addEventListener('click', () => {
+    // Uncheck all, wait a beat, recheck all — the classic dark pattern
+    setAllBoxes(false)
+    toast('Preferences reset. Refreshing your options…', 'info', 2000)
+    setTimeout(() => {
+      setAllBoxes(true)
+      toast('Your preferences have been updated to: everything. Thank you.', 'ok', 4000)
+    }, 1800)
+  })
+}
+
 // ══ Event wiring + Boot ══════════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
+  initCookiePopup()
   // Password strength
   const regPassEl = $('reg-pass')
   const passStrengthFill = $('pass-strength-fill')
@@ -480,6 +540,16 @@ document.addEventListener('DOMContentLoaded', () => {
   setupUploadZone('verify-id-zone',  'verify-id-file',  'verify-id-preview')
   setupUploadZone('login-id-zone',   'login-id-file',   'login-id-preview')
 
+  // Modal nav links
+  $('nav-about').addEventListener('click',   e => { e.preventDefault(); $('modal-dual').classList.remove('hidden') })
+  $('nav-privacy').addEventListener('click', e => { e.preventDefault(); $('modal-dual').classList.remove('hidden') })
+  document.querySelectorAll('.modal-close').forEach(btn => {
+    btn.addEventListener('click', () => $('modal-dual').classList.add('hidden'))
+  })
+  document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+    backdrop.addEventListener('click', e => { if (e.target === backdrop) backdrop.classList.add('hidden') })
+  })
+
   // Button event listeners
   $('btn-go-register').addEventListener('click',  () => showView('register'))
   $('btn-go-login').addEventListener('click',     () => showView('login'))
@@ -493,6 +563,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   $('btn-logout').addEventListener('click',      logout)
   $('btn-dash-logout').addEventListener('click', logout)
+
+  $('logo').addEventListener('click', () => {
+    const user = db?.auth?.currentUser
+    if (user) { goDash() } else { showSection('hero') }
+  })
 
   // Enter key support
   const regPass2 = $('reg-pass2')

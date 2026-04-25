@@ -26,7 +26,7 @@
     </div>
   </header>
 
-  <!-- Background grid (visible on all pages) -->
+  <!-- Background grid -->
   <div id="hero-bg-grid"></div>
 
   <!-- Hero banner (shown only when logged out) -->
@@ -241,6 +241,232 @@
 
     </div>
   </section>
+
+  <!-- Combined About + Privacy Modal (desktop: side-by-side; mobile: individual) -->
+  <div id="modal-dual" class="modal-backdrop hidden">
+    <div class="modal-dual-inner">
+
+      <!-- About panel -->
+      <div id="modal-about" class="modal-box modal-box--dual">
+        <button class="modal-close" data-close-dual><i class="fa-solid fa-xmark"></i></button>      <div class="modal-header">
+        <i class="fa-solid fa-building-columns"></i>
+        <h2>About SecureID™</h2>
+        <p class="modal-sub">Established 2007 · Definitely a real company</p>
+      </div>
+
+      <div class="modal-section">
+        <h3><i class="fa-solid fa-flag"></i> Our Mission</h3>
+        <p>SecureID™ exists to bring <em>frictionless identity verification</em> to the masses — or more accurately, to bring the masses' identities to us. We believe every person deserves to hand their government-issued documents to a stranger on the internet, confident that <em>something</em> will happen to them afterward.</p>
+      </div>
+
+      <div class="modal-section">
+        <h3><i class="fa-solid fa-timeline"></i> Our Story</h3>
+        <div class="timeline">
+          <div class="tl-item">
+            <span class="tl-year">2007</span>
+            <span class="tl-text">Founded in a garage. ISO 27001 certification application submitted. Never heard back.</span>
+          </div>
+          <div class="tl-item">
+            <span class="tl-year">2011</span>
+            <span class="tl-text">Upgraded from SHA-1 to SHA-1 with a comment that says "TODO: upgrade this".</span>
+          </div>
+          <div class="tl-item">
+            <span class="tl-year">2016</span>
+            <span class="tl-text">First data breach. We sent a strongly-worded internal Slack message about it.</span>
+          </div>
+          <div class="tl-item">
+            <span class="tl-year">2018</span>
+            <span class="tl-text">GDPR became enforceable. We added a cookie banner. Problem solved.</span>
+          </div>
+          <div class="tl-item">
+            <span class="tl-year">2021</span>
+            <span class="tl-text">Migrated user data to a public GitHub repository for "scalability reasons".</span>
+          </div>
+          <div class="tl-item">
+            <span class="tl-year">2024</span>
+            <span class="tl-text">Integrated AI verification. The AI also doesn't know what it's doing, but it's confident about it.</span>
+          </div>
+          <div class="tl-item">
+            <span class="tl-year">2025</span>
+            <span class="tl-text">Received our 4th "Most Innovative Startup" award from an organisation we've never heard of.</span>
+          </div>
+          <div class="tl-item">
+            <span class="tl-year">2026ff</span>
+            <span class="tl-text">We are optimistic something will happen soon.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <h3><i class="fa-solid fa-people-group"></i> Leadership Team</h3>
+        <div class="team-grid">
+          <div class="team-card">
+            <i class="fa-solid fa-user-tie"></i>
+            <strong>D. Fineman</strong>
+            <span>CEO & Chief Identity Officer</span>
+            <p>"Data is the new oil. We are the new BP."</p>
+          </div>
+          <div class="team-card">
+            <i class="fa-solid fa-user-shield"></i>
+            <strong>B. da Hacker</strong>
+            <span>Head of Security</span>
+            <p>"Our password hashing is state-of-the-art. The state is 2009."</p>
+          </div>
+          <div class="team-card">
+            <i class="fa-solid fa-user-doctor"></i>
+            <strong>C. Oversight</strong>
+            <span>Chief Compliance Officer</span>
+            <p>"GDPR? More like G-D-P-R?; we'll look into it."</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <h3><i class="fa-solid fa-award"></i> Certifications & Accolades</h3>
+        <div class="cert-list">
+          <div class="cert-item"><i class="fa-solid fa-certificate"></i><div><strong>ISO 27001 *</strong><span>* Application pending since 2007. We remain optimistic.</span></div></div>
+          <div class="cert-item"><i class="fa-solid fa-certificate"></i><div><strong>SOC 2 Type II †</strong><span>† The auditor found 47 issues. We fixed the typo in the report title.</span></div></div>
+          <div class="cert-item"><i class="fa-solid fa-certificate"></i><div><strong>PCI-DSS Compliant ‡</strong><span>‡ We don't handle payments but we liked the badge.</span></div></div>
+          <div class="cert-item"><i class="fa-solid fa-certificate"></i><div><strong>Best Workplace 2023 §</strong><span>§ Survey conducted exclusively among the founding team.</span></div></div>
+        </div>
+      </div>
+
+      <p class="modal-fine-print">SecureID™ is a satirical project. Please do not upload your actual ID to random websites on the Internet !!!.</p>
+      </div>
+
+      <!-- Privacy panel -->
+      <div id="modal-privacy" class="modal-box modal-box--dual">
+        <button class="modal-close" data-close-dual><i class="fa-solid fa-xmark"></i></button>      <div class="modal-header">
+        <i class="fa-solid fa-user-secret"></i>
+        <h2>Privacy Policy</h2>
+        <p class="modal-sub">Last updated: Now — if not, read again · Effective: Immediately · Applies to: You, specifically</p>
+      </div>
+
+      <div class="modal-section">
+        <h3><i class="fa-solid fa-circle-info"></i> The Short Version</h3>
+        <div class="disclaimer-box">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <div>
+            <strong>We collect everything. We store everything. We share… some things.</strong>
+            <p>By visiting this page you have agreed to our full terms. Scrolling down constitutes a legally binding signature in 34 jurisdictions we just made up.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <h3><i class="fa-solid fa-magnifying-glass"></i> 1. What We Collect</h3>
+        <p>We collect any information you provide, any information you don't provide but we infer, and any information decides to hallucinate. This includes but is not limited to:</p>
+        <ul class="privacy-list">
+          <li><i class="fa-solid fa-chevron-right"></i> Your name, date of birth, address, and document number (from your ID)</li>
+          <li><i class="fa-solid fa-chevron-right"></i> Your password (hashed, unless the dev box is running, in which case plaintext)</li>
+          <li><i class="fa-solid fa-chevron-right"></i> The face on your ID photo, processed by an AI that will remember it forever</li>
+          <li><i class="fa-solid fa-chevron-right"></i> Ambient audio (currently disabled — but the checkbox is in the code, commented out)</li>
+          <li><i class="fa-solid fa-chevron-right"></i> Your hopes, dreams, and reasonable expectations of privacy</li>
+        </ul>
+      </div>
+
+      <div class="modal-section">
+        <h3><i class="fa-solid fa-database"></i> 2. How We Store It</h3>
+        <p>Your data is stored in a <em>highly secure</em> infrastructure — specifically a public GitHub repository with a descriptive folder name. We chose GitHub because it has a green "Verified" badge next to commits, which we felt communicated trust.</p>
+        <p style="margin-top:.75rem">Backups are maintained in three locations: the main repo, the refs/heads/main branch, and Nyxie's USB-stick.</p>
+      </div>
+
+      <div class="modal-section">
+        <h3><i class="fa-solid fa-share-nodes"></i> 3. Who We Share It With</h3>
+        <div class="share-table">
+          <div class="share-row share-head">
+            <span>Recipient</span><span>What They Get</span><span>Why</span>
+          </div>
+          <div class="share-row">
+            <span>Our AI provider</span><span>Your full OCR text</span><span>Verification (allegedly)</span>
+          </div>
+          <div class="share-row">
+            <span>GitHub (Microsoft)</span><span>Everything</span><span>It's literally stored there</span>
+          </div>
+          <div class="share-row">
+            <span>Advertisers</span><span>Anonymised † data</span><span>Revenue</span>
+          </div>
+          <div class="share-row">
+            <span>Governments</span><span>Whatever they ask for</span><span>We don't want trouble</span>
+          </div>
+          <div class="share-row">
+            <span>Hackers</span><span>Everything, eventually</span><span>Unintentional but inevitable</span>
+          </div>
+        </div>
+        <p class="table-note">† "Anonymised" means we removed the vowels from your first name.</p>
+      </div>
+
+      <div class="modal-section">
+        <h3><i class="fa-solid fa-scale-balanced"></i> 4. Your Rights (EU/UK)</h3>
+        <p>Under GDPR you have the right to access, correct, and delete your data. To exercise these rights, please submit a written request by post to our registered address. We do not have a registered address. Requests sent digitally will be filtered by a rule titled "ignore".</p>
+        <p style="margin-top:.75rem">You also have the right to lodge a complaint with your national data protection authority. We encourage you to do this, as we find the letters entertaining.</p>
+      </div>
+
+      <div class="modal-section">
+        <h3><i class="fa-solid fa-cookie-bite"></i> 5. Cookies</h3>
+        <p>We use all cookies. First-party, third-party, session, persistent, analytical, marketing, and some we invented ourselves called "investigative cookies" which are not a recognised category but felt accurate. By existing on the internet you have consented to all of them.</p>
+      </div>
+
+      <div class="modal-section">
+        <h3><i class="fa-solid fa-pen-to-square"></i> 6. Changes to This Policy</h3>
+        <p>We may update this policy at any time, retroactively, including for data we collected before the policy existed. We will notify you of changes by updating the "Last updated" date at the top of this page (we won't).</p>
+      </div>
+
+      <p class="modal-fine-print">This privacy policy is satirical and describes fictional data practices for humorous effect. The real lesson: always check where your data actually goes before uploading sensitive documents.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Cookie Consent Popup -->
+  <div id="cookie-popup">
+    <div id="cookie-inner">
+      <div id="cookie-header">
+        <i class="fa-solid fa-cookie-bite"></i>
+        <div>
+          <strong>We Value Your Privacy™</strong>
+          <span id="cookie-sub">and also your data, biometrics, browsing habits, and ${this.not_sus_value}</span>
+        </div>
+      </div>
+      <p id="cookie-body">
+        We use cookies — and by "cookies" we mean exhaustive surveillance apparatus' spanning
+        69 third-party vendors, 42 intelligence agencies (pending), and one guy named Nyxie who
+        watches the logs on weekends.<br>
+        Some cookies are <em>strictly necessary</em>, meaning we decided they were. Others help us "improve your experience", 
+        which is our legal team's favourite euphemism.<br>
+        By clicking <strong>Accept All</strong> you consent to everything we do now, have done, and will do in futures not yet invented.<br>
+        By clicking <strong>Decline</strong> nothing ever happens.
+      </p>
+      <div id="cookie-options">
+        <label class="cookie-toggle">
+          <span class="ck-box ck-disabled"><i class="fa-solid fa-check"></i></span>
+          <span>Strictly Necessary <em>(you cannot uncheck this, nice try)</em></span>
+        </label>
+        <label class="cookie-toggle" data-ck="ck-analytics">
+          <span class="ck-box ck-checked"><i class="fa-solid fa-check"></i></span>
+          <span>Analytics <em>(we already know)</em></span>
+        </label>
+        <label class="cookie-toggle" data-ck="ck-marketing">
+          <span class="ck-box ck-checked"><i class="fa-solid fa-check"></i></span>
+          <span>Marketing <em>(resistance is futile)</em></span>
+        </label>
+        <label class="cookie-toggle" data-ck="ck-vibes">
+          <span class="ck-box ck-checked"><i class="fa-solid fa-check"></i></span>
+          <span>Vibes Profiling <em>(proprietary — ISO pending since 2007)</em></span>
+        </label>
+        <label class="cookie-toggle" data-ck="ck-nyxie">
+          <span class="ck-box ck-checked"><i class="fa-solid fa-check"></i></span>
+          <span>Nyxie's Weekend Access <em>(he means well)</em></span>
+        </label>
+      </div>
+      <div id="cookie-btns">
+        <button id="btn-cookie-settings">Manage Preferences</button>
+        <button id="btn-cookie-reject" class="btn-ghost">Decline <em>(coming soon)</em></button>
+        <button id="btn-cookie-accept" class="btn-primary">Accept All &amp; Proceed</button>
+      </div>
+      <p id="cookie-fine-print">By closing this banner, scrolling, blinking, or existing within 10 metres of a device displaying this website, you agree to our <a href="#">Cookie Policy</a>, <a href="#">Privacy Policy</a>, and <a href="#">Nyxie's Addendum (2026)</a>.</p>
+    </div>
+  </div>
 
   <!-- Global toast -->
   <div id="toast-container"></div>
