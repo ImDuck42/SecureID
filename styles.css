@@ -909,6 +909,24 @@ em {
             color: var(--text);
             font-weight: 600;
         }
+
+        .id-value-main {
+            color: var(--green);
+            font-weight: 700;
+        }
+
+        .id-subfield {
+            font-size: .85rem;
+            color: var(--overlay1);
+            margin-top: .25rem;
+            padding-left: .5rem;
+            border-left: 2px solid var(--surface1);
+
+            .id-subfield-label {
+                color: var(--overlay0);
+                margin-right: .25rem;
+            }
+        }
     }
 }
 

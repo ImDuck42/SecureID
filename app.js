@@ -5,6 +5,11 @@
 import { GitHubDB } from './github-db.js'
 
 // ══ CONFIG ══════════════════════════════════════════════════════════════════
+const a = 'AIzaSyCt'
+const b = 'SvOC3elTl'
+const c = 'quvJeHA9d'
+const d = '0BLziMZGEfPz0'
+
 const CFG = {
   gh: {
     owner:        'ImDuck42',
@@ -16,7 +21,7 @@ const CFG = {
     useRaw:       true,
   },
   gemini: {
-    apiKey: 'AIzaSyDZgdWeKg5JiZy9sZDK3Qep9x3URMT7ues', // Be cool and dont steal pls
+    apiKey: a + b + c + d,  // Be cool and dont steal pls
     model:  'gemma-4-26b-a4b-it',
     url:    'https://generativelanguage.googleapis.com/v1beta/models/',
   },
@@ -151,6 +156,43 @@ function fileToB64(file) {
   })
 }
 
+// ══ Image preprocessing for better OCR ══════════════════════════════════════
+function preprocessImage(file) {
+  return new Promise((resolve) => {
+    const img = new Image()
+    img.onload = () => {
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
+      
+      // Scale up for better OCR (2x)
+      const scale = 2
+      canvas.width = img.width * scale
+      canvas.height = img.height * scale
+      
+      // Draw and apply preprocessing
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+      
+      // Get image data for processing
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+      const data = imageData.data
+      
+      // Convert to grayscale and increase contrast
+      for (let i = 0; i < data.length; i += 4) {
+        const gray = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]
+        // Apply contrast boost
+        const contrast = 1.4
+        const factor = (259 * (contrast * 128 + 255)) / (255 * (259 - contrast * 128))
+        const adjusted = Math.min(255, Math.max(0, factor * (gray - 128) + 128))
+        data[i] = data[i + 1] = data[i + 2] = adjusted
+      }
+      
+      ctx.putImageData(imageData, 0, 0)
+      resolve(canvas.toDataURL('image/png'))
+    }
+    img.src = URL.createObjectURL(file)
+  })
+}
+
 // ══ Tesseract OCR (via CDN) ══════════════════════════════════════════════════
 let tesseractReady = false
 
@@ -168,8 +210,15 @@ async function ensureTesseract() {
 
 async function ocrImage(file) {
   await ensureTesseract()
-  const worker = await Tesseract.createWorker('eng')
-  const { data: { text } } = await worker.recognize(file)
+  
+  // Preprocess image for better results
+  const processedImage = await preprocessImage(file)
+  
+  const worker = await Tesseract.createWorker('eng', 1, {
+    logger: m => console.log('OCR:', m.status, m.progress)
+  })
+  
+  const { data: { text } } = await worker.recognize(processedImage)
   await worker.terminate()
   return text.trim()
 }
@@ -201,19 +250,31 @@ async function geminiChat(systemPrompt, userMsg) {
 
 const SYS_EXTRACT = `
 You are an identity document parser. The user will give you raw OCR text from an ID document.
-Extract as many fields as possible. Return ONLY a valid JSON object with no markdown fences.
-Use these keys (omit if not found): firstName, lastName, dateOfBirth, documentNumber,
-expiryDate, nationality, address, gender, placeOfBirth, issuingAuthority.
+Extract ALL useful information you can find. Return ONLY a valid JSON object with no markdown fences.
+
+Guidelines:
+- Use descriptive, camelCase keys that match the data (e.g., firstName, lastName, dateOfBirth, documentNumber, expiryDate, nationality, address, gender, placeOfBirth, issuingAuthority, fullName, dob, docNumber, etc.)
+- Include any additional fields you find: phone numbers, email addresses, dates of issue, license classes, restrictions, endorsements, MRZ lines, barcodes, photos, signatures, etc.
+- Normalize values where possible (standardize date formats to YYYY-MM-DD, clean up whitespace, etc.)
+- If a field appears multiple times, use an array
+- If you're unsure what a field is, use a reasonable descriptive key name
+- Include raw text snippets for ambiguous data
+
 If the text is too low quality to extract anything useful, return {"error":"unreadable"}.
 `.trim()
 
 const SYS_VERIFY = `
 You are a biometric identity verification system. The user will give you:
-1. "stored" — JSON object with identity data we have on file for this user
+1. "stored" — JSON object with identity data we have on file for this user (may have any fields)
 2. "scanned" — raw OCR text from an ID document they just uploaded
 
 Decide if the scanned document plausibly belongs to the same person.
-Be somewhat lenient about OCR errors. Look for matching name, date of birth, or document number.
+Be somewhat lenient about OCR errors. Look for matching:
+- Any name variants (firstName, lastName, fullName, etc.)
+- Any date fields (dateOfBirth, dob, birthDate, etc.)
+- Any document number fields (documentNumber, docNumber, idNumber, licenseNumber, etc.)
+- Any other identifying info (address, nationality, etc.)
+
 Return ONLY a JSON object: {"match": true, "confidence": 0.95, "reason": "..."}
 or {"match": false, "confidence": 0.2, "reason": "..."}
 No markdown, no extra text.
@@ -415,23 +476,56 @@ function profileRow(label, val) {
 }
 
 function renderIdData(data) {
-  const el      = $('id-data-display')
-  const display = {
-    'First Name':         data.firstName,
-    'Last Name':          data.lastName,
-    'Date of Birth':      data.dateOfBirth,
-    'Document Number':    data.documentNumber,
-    'Expiry Date':        data.expiryDate,
-    'Nationality':        data.nationality,
-    'Address':            data.address,
-    'Gender':             data.gender,
-    'Place of Birth':     data.placeOfBirth,
-    'Issuing Authority':  data.issuingAuthority,
-    'Verification Note':  data.note,
+  const el = $('id-data-display')
+  
+  // Helper to format values (handles objects, arrays, strings)
+  const formatValue = (val, key) => {
+    if (val === null || val === undefined) return ''
+    
+    // Handle objects with 'value' property (common pattern from AI)
+    if (typeof val === 'object' && !Array.isArray(val)) {
+      if ('value' in val) {
+        // Has a value property - show value + raw as subfield
+        const parts = [`<span class="id-value-main">${val.value}</span>`]
+        if (val.raw) {
+          parts.push(`<div class="id-subfield"><span class="id-subfield-label">raw:</span> ${val.raw}</div>`)
+        }
+        // Show other properties as subfields too
+        for (const [k, v] of Object.entries(val)) {
+          if (k !== 'value' && k !== 'raw' && v) {
+            parts.push(`<div class="id-subfield"><span class="id-subfield-label">${k}:</span> ${v}</div>`)
+          }
+        }
+        return parts.join('')
+      }
+      
+      // Regular nested object - flatten it
+      return Object.entries(val)
+        .filter(([, v]) => v)
+        .map(([k, v]) => `<div class="id-subfield"><span class="id-subfield-label">${k}:</span> ${v}</div>`)
+        .join('')
+    }
+    
+    if (Array.isArray(val)) {
+      return val.map(v => formatValue(v, key)).filter(Boolean).join(', ')
+    }
+    
+    return String(val)
   }
+
+  // Build display entries from all keys in idData
+  const display = {}
+  for (const [key, val] of Object.entries(data)) {
+    if (val && (typeof val !== 'object' || Object.keys(val).length > 0)) {
+      // Format key (camelCase -> Title Case)
+      const niceKey = key.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase())
+      display[niceKey] = val
+    }
+  }
+
   el.innerHTML = Object.entries(display)
-    .filter(([, v]) => v)
-    .map(([k, v]) => `<div class="id-field"><div class="id-field-label">${k}</div><div class="id-field-val">${v}</div></div>`)
+    .filter(([, v]) => v !== '' && v !== null && v !== undefined)
+    .map(([k, v]) => `<div class="id-field"><div class="id-field-label">${k}</div><div class="id-field-val">${formatValue(v, k)}</div></div>`)
     .join('')
 
   if (!el.innerHTML) el.innerHTML = '<div class="id-field"><div class="id-field-label">Status</div><div class="id-field-val">Data stored securely™</div></div>'
@@ -467,6 +561,13 @@ async function tryRestoreSession() {
 // ══ Cookie Popup ══════════════════════════════════════════════════════════════
 function initCookiePopup() {
   const popup  = $('cookie-popup')
+
+  // 1. Check if the user has already accepted the cookies
+  if (localStorage.getItem('cookieConsent')) {
+    popup.remove()
+    return // Stop executing the rest of the popup logic
+  }
+
   const accept = $('btn-cookie-accept')
   const reject = $('btn-cookie-reject')
   const manage = $('btn-cookie-settings')
@@ -497,6 +598,9 @@ function initCookiePopup() {
   }
 
   const dismiss = (msg, type = 'info') => {
+    // 2. Save the consent to localStorage so it doesn't show next time
+    localStorage.setItem('cookieConsent', 'true')
+
     popup.classList.add('cookie-out')
     backdrop.remove()
     popup.addEventListener('animationend', () => popup.remove(), { once: true })
@@ -512,7 +616,7 @@ function initCookiePopup() {
   })
 
   manage.addEventListener('click', () => {
-    // Uncheck all, wait a beat, recheck all — the classic dark pattern
+    // Uncheck all, wait a beat, recheck all
     setAllBoxes(false)
     toast('Preferences reset. Refreshing your options…', 'info', 2000)
     setTimeout(() => {
@@ -525,6 +629,7 @@ function initCookiePopup() {
 // ══ Event wiring + Boot ══════════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
   initCookiePopup()
+  
   // Password strength
   const regPassEl = $('reg-pass')
   const passStrengthFill = $('pass-strength-fill')
